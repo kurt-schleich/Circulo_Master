@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.cliente.contato_base import ContatoBase
+from contato_base import ContatoBase
 
 
 class IContatosManager(ABC):

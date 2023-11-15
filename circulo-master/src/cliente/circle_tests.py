@@ -1,7 +1,7 @@
 import unittest
 
-from src.aluno.base.circulo import Circulo
-from src.aluno.g_contatos import GContatos
+from circulo import Circulo
+from g_contatos import GContatos
 
 
 class CircleTests(unittest.TestCase):
