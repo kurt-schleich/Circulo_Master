@@ -45,18 +45,18 @@ class ContactsCircleRelationsTest(unittest.TestCase):
 
     def test_adicionarContatoInexistenteCirculoExistente(self):
         self.assertTrue(self.gcont.createCircle(self.FAMILIA, 3), "O circulo deve ser adicionado")
-        '''with self.assertRaises(ContatoNotFoundException):
-            self.gcont.tie(self.JAMES, self.FAMILIA)'''
+        with self.assertRaises(ContatoNotFoundException):
+            self.gcont.tie(self.JAMES, self.FAMILIA)
 
         self.assertEqual(0, self.gcont.getCircle(self.FAMILIA).getNumberOfContacts(),
                          "Numero de contatos no circulo errado")
 
     def test_adicionarContatoCirculoInexistente(self):
         self.assertTrue(self.gcont.createContact(self.JAMES, self.JAMES_EMAIL), "O contato deve ser adicionado")
-        '''with self.assertRaises(CirculoNotFoundException) as cm:
-            self.gcont.tie(self.JAMES, self.FAMILIA)'''
+        with self.assertRaises(CirculoNotFoundException) as cm:
+            self.gcont.tie(self.JAMES, self.FAMILIA)
 
-        '''self.assertTrue(cm.getCirculoNaoEncontrado() == self.FAMILIA, "A excecao nao retornou o id do circulo que nao existe")'''
+        self.assertTrue(cm.getCirculoNaoEncontrado() == self.FAMILIA, "A excecao nao retornou o id do circulo que nao existe")
 
         self.assertEqual(self.gcont.getCircle(self.FAMILIA), None, "Circulo nao existente")
         self.assertEqual([], self.gcont.getCircles(self.JAMES), "Contato nao esta em nenhum circulo")
@@ -123,21 +123,21 @@ class ContactsCircleRelationsTest(unittest.TestCase):
         self.assertTrue(self.gcont.createCircle(self.FAMILIA, 3), "O circulo deve ser adicionado")
         self.assertTrue(self.gcont.createContact(self.JAMES, self.JAMES_EMAIL), "O contato deve ser adicionado")
         self.assertTrue(self.gcont.tie(self.JAMES, self.FAMILIA), "Contato deve ser adicionado ao circulo")
-        '''with self.assertRaises(ContatoNotFoundException) as cm:
+        with self.assertRaises(ContatoNotFoundException) as cm:
             self.gcont.untie("margarida", self.FAMILIA)
 
         self.assertTrue(cm.getContatoNaoEncontrado() == "margarida",
-                        "A excecao nao retornou o id do contato que nao existe")'''
+                        "A excecao nao retornou o id do contato que nao existe")
         self.assertEqual(1, self.gcont.getCircle(self.FAMILIA).getNumberOfContacts(),
                          "Numero de contatos no circulo errado")
 
     def test_removendoContatoDoCirculoInexistente(self):
         self.assertTrue(self.gcont.createContact(self.JAMES, self.JAMES_EMAIL), "O contato deve ser adicionado")
-        '''with self.assertRaises(CirculoNotFoundException) as cm:
+        with self.assertRaises(CirculoNotFoundException) as cm:
             self.gcont.untie(self.JAMES, self.FAMILIA)
 
         self.assertTrue(cm.getCirculoNaoEncontrado() == self.FAMILIA,
-                        "A excecao nao retornou o id do circulo que nao existe")'''
+                        "A excecao nao retornou o id do circulo que nao existe")
 
     def test_removendoCirculoQuePossuiContatos(self):  # throws CirculoNotFoundException, ContatoNotFoundException {
         self.assertTrue(self.gcont.createCircle(self.FAMILIA, 3), "O circulo deve ser adicionado")

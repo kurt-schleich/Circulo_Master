@@ -5,6 +5,8 @@ from circulo import Circulo
 from icirculo_operations_manager import ICirculoOperationsManager
 from icirculos_manager import ICirculosManager
 from icontatos_manager import IContatosManager
+from contato_not_found_exception import ContatoNotFoundException as coe
+from circulo_not_found_exception import CirculoNotFoundException as cie
 
 
 
@@ -33,49 +35,62 @@ class GContatos(IContatosManager, ICirculosManager, ICirculoOperationsManager):
         return self.contatos_exist
 
     def updateContact(self, contato: Contato) -> bool:
-        for contacto in self.contatos_exist:
-            if contacto.getId() == contato.getId():
-                contacto.setEmail(contato.getEmail())
-                return True
-        return False
+        try:
+            for contacto in self.contatos_exist:
+                if contacto.getId() == contato.getId():
+                    contacto.setEmail(contato.getEmail())
+                    return True
+        except:
+            raise coe(contato.getId())
 
     def removeContact(self, id: str) -> bool:
-        for contacts in self.contatos_exist:
-            if contacts.getId() == id:
-                self.contatos_exist.remove(contacts)
-                return True
-        return False
+        try:
+            for contacts in self.contatos_exist:
+                if contacts.getId() == id:
+                    self.contatos_exist.remove(contacts)
+                    return True
+        except:
+            raise coe(id)
 
     def getContact(self, id: str) -> Contato:
-        for contacts in self.contatos_exist:
-            if contacts.getId() == id:
-                return contacts
-        return None
+        try:
+            for contacts in self.contatos_exist:
+                if contacts.getId() == id:
+                    return contacts
+        except:
+            raise coe(id)
+
     def getNumberOfContacts(self) -> int:
         return len(self.contatos_exist)
 
     def favoriteContact(self, idContato: str) -> bool:
-        for contacts in self.contatos_exist:
-            if contacts.getId() == idContato:
-                contacts.favor = True
-                return True
-        return False
+        try:
+            for contacts in self.contatos_exist:
+                if contacts.getId() == idContato:
+                    contacts.favor = True
+                    return True
+        except:
+            raise coe(idContato)
 
     def unfavoriteContact(self, idContato: str) -> bool:
-        for contacts in self.contatos_exist:
-            if contacts.getId() == idContato:
-                contacts.favor = False
-                return True
-        return False
+        try:
+            for contacts in self.contatos_exist:
+                if contacts.getId() == idContato:
+                    contacts.favor = False
+                    return True
+        except:
+            raise coe(idContato)
 
     def isFavorited(self, id: str) -> bool:
-        for contacts in self.contatos_exist:
-            if contacts.getId() == id:
-                if contacts.favor:
-                    return True
-                else:
-                    return False
-        return False
+        try:
+            for contacts in self.contatos_exist:
+                if contacts.getId() == id:
+                    if contacts.favor:
+                        return True
+                    else:
+                        return False
+        except:
+            raise coe(id)
 
     def getFavorited(self) -> list:
         is_favo = []
@@ -105,61 +120,73 @@ class GContatos(IContatosManager, ICirculosManager, ICirculoOperationsManager):
 
 
     def updateCircle(self, circulo: Circulo) -> bool:
-        for circle in self.circle_active:
-            if circle.getId() == circulo.getId():
-                if circulo.limite <= 0:
-                    return False
-                else:
-                    circle.limite = (circulo.getLimite())
-                    return True
-        return False
+        try:
+            for circle in self.circle_active:
+                if circle.getId() == circulo.getId():
+                    if circulo.limite <= 0:
+                        return False
+                    else:
+                        circle.limite = (circulo.getLimite())
+                        return True
+        except:
+            raise cie(circulo.getId())
 
     def getCircle(self, idCirculo: str) -> Circulo:
-        for circulo in self.circle_active:
-            if circulo.getId() == idCirculo:
-                return circulo
-        return None
+        try:
+            for circulo in self.circle_active:
+                if circulo.getId() == idCirculo:
+                    return circulo
+        except:
+            raise cie(idCirculo)
 
     def getAllCircles(self) -> list:
         return self.circle_active
 
     def removeCircle(self, idCirculo: str) -> bool:
-        for circle in self.circle_active:
-            if circle.getId() == idCirculo:
-                self.circle_active.remove(circle)
-                return True
-        return False
+        try:
+            for circle in self.circle_active:
+                if circle.getId() == idCirculo:
+                    self.circle_active.remove(circle)
+                    return True
+        except:
+            raise cie(idCirculo)
 
     def getNumberOfCircles(self) -> int:
         return len(self.circle_active)
 
     def tie(self, idContato: str, idCirculo: str) -> bool:
-        for circle in self.circle_active:
-            if circle.getId() == idCirculo:
-                if circle.limite > len(circle.contatos):
-                    for contacts in self.contatos_exist:
-                        if contacts.getId() == idContato:
-                            for contatos in circle.contatos:
-                                if contacts.getId() == contatos.getId():
-                                    return False
-                            circle.contatos.append(contacts)
-                            return True
+        try:
+            for circle in self.circle_active:
+                if circle.getId() == idCirculo:
+                    if circle.limite > len(circle.contatos):
+                        for contacts in self.contatos_exist:
+                            if contacts.getId() == idContato:
+                                for contatos in circle.contatos:
+                                    if contacts.getId() == contatos.getId():
+                                        return False
+                                circle.contatos.append(contacts)
+                                self.organizador()
+                                return True
+                    else:
+                        return False
                 else:
-                    return False
-            else:
-                pass
-        return False
+                    pass
+        except:
+            raise cie(idCirculo)
 
     def untie(self, idContato: str, idCirculo: str) -> bool:
-        for circle in self.circle_active:
-            if circle.getId() == idCirculo:
-                for contacts in circle.contatos:
-                    if contacts.getId() == idContato:
-                        circle.contatos.remove(contacts)
-                        return True
-            else:
-                pass
-        return False
+        try:
+            for circle in self.circle_active:
+                if circle.getId() == idCirculo:
+                    for contacts in circle.contatos:
+                        if contacts.getId() == idContato:
+                            circle.contatos.remove(contacts)
+                            return True
+                    raise coe(idContato)
+                else:
+                    pass
+        except:
+            raise cie(idCirculo)
 
     def getContacts(self, id: str) -> list:
         for circle in self.circle_active:
@@ -173,10 +200,7 @@ class GContatos(IContatosManager, ICirculosManager, ICirculoOperationsManager):
             for contacts in circle.contatos:
                 if contacts.getId() == id:
                     lista.append(circle)
-                    return lista
-            else:
-                pass
-        return []
+        return lista
 
     def getCommomCircle(self, idContato1: str, idContato2: str) -> list:
         lista1 = []
@@ -206,4 +230,16 @@ class GContatos(IContatosManager, ICirculosManager, ICirculoOperationsManager):
                     else:
                         pass
         return None
+
+    def organizador(self):
+        organiza = []
+        final = []
+        for elementos in self.circle_active:
+            organiza.append(elementos.getId())
+        organiza = sorted(organiza)
+        for circulo in self.circle_active:
+            for ide in organiza:
+                if circulo.getId() == ide:
+                    final.append(circulo)
+        self.circle_active = final
 
