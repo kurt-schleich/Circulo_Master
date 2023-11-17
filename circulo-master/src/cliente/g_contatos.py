@@ -155,38 +155,35 @@ class GContatos(IContatosManager, ICirculosManager, ICirculoOperationsManager):
         return len(self.circle_active)
 
     def tie(self, idContato: str, idCirculo: str) -> bool:
-        try:
-            for circle in self.circle_active:
-                if circle.getId() == idCirculo:
-                    if circle.limite > len(circle.contatos):
-                        for contacts in self.contatos_exist:
-                            if contacts.getId() == idContato:
-                                for contatos in circle.contatos:
-                                    if contacts.getId() == contatos.getId():
-                                        return False
-                                circle.contatos.append(contacts)
-                                self.organizador()
-                                return True
-                    else:
-                        return False
-                else:
-                    pass
-        except:
-            raise cie(idCirculo)
-
-    def untie(self, idContato: str, idCirculo: str) -> bool:
-        try:
-            for circle in self.circle_active:
-                if circle.getId() == idCirculo:
-                    for contacts in circle.contatos:
+        for circle in self.circle_active:
+            if circle.getId() == idCirculo:
+                if circle.limite > len(circle.contatos):
+                    for contacts in self.contatos_exist:
                         if contacts.getId() == idContato:
-                            circle.contatos.remove(contacts)
+                            for contatos in circle.contatos:
+                                if contacts.getId() == contatos.getId():
+                                    return False
+                            circle.contatos.append(contacts)
+                            self.organizador()
                             return True
                     raise coe(idContato)
                 else:
-                    pass
-        except:
-            raise cie(idCirculo)
+                    return False
+            else:
+                pass
+        raise cie(idCirculo)
+
+    def untie(self, idContato: str, idCirculo: str) -> bool:
+        for circle in self.circle_active:
+            if circle.getId() == idCirculo:
+                for contacts in circle.contatos:
+                    if contacts.getId() == idContato:
+                        circle.contatos.remove(contacts)
+                        return True
+                raise coe(idContato)
+            else:
+                pass
+        raise cie(idCirculo)
 
     def getContacts(self, id: str) -> list:
         for circle in self.circle_active:
@@ -207,8 +204,10 @@ class GContatos(IContatosManager, ICirculosManager, ICirculoOperationsManager):
         lista2 = []
         counter = 0
         for contacts in self.contatos_exist:
-            if idContato1 or idContato2 == contacts.getId:
-               counter += 1
+            if idContato1 == contacts.getId():
+                counter += 1
+            if idContato2 == contacts.getId():
+                counter += 1
             else:
                 pass
         if counter != 2:
@@ -220,15 +219,12 @@ class GContatos(IContatosManager, ICirculosManager, ICirculoOperationsManager):
                     lista1.append(circle)
                 elif contacts.getId() == idContato2:
                     lista2.append(circle)
-                else:
-                    pass
-        for circle1, circle2 in lista1, lista2:
-            for contacts1 in circle1:
-                for contacts2 in circle2:
-                    if contacts1 == contacts2:
-                        return contacts1
-                    else:
-                        pass
+        for circle1 in lista1:
+            for circle2 in lista2:
+                for contacts1 in circle1.contatos:
+                    for contacts2 in circle2.contatos:
+                        if contacts1 == contacts2:
+                            return contacts1
         return None
 
     def organizador(self):

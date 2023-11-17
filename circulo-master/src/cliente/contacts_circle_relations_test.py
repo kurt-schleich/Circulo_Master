@@ -56,7 +56,7 @@ class ContactsCircleRelationsTest(unittest.TestCase):
         with self.assertRaises(CirculoNotFoundException) as cm:
             self.gcont.tie(self.JAMES, self.FAMILIA)
 
-        self.assertTrue(cm.getCirculoNaoEncontrado() == self.FAMILIA, "A excecao nao retornou o id do circulo que nao existe")
+            self.assertTrue(cm.getCirculoNaoEncontrado() == self.FAMILIA, "A excecao nao retornou o id do circulo que nao existe")
 
         self.assertEqual(self.gcont.getCircle(self.FAMILIA), None, "Circulo nao existente")
         self.assertEqual([], self.gcont.getCircles(self.JAMES), "Contato nao esta em nenhum circulo")
@@ -126,7 +126,7 @@ class ContactsCircleRelationsTest(unittest.TestCase):
         with self.assertRaises(ContatoNotFoundException) as cm:
             self.gcont.untie("margarida", self.FAMILIA)
 
-        self.assertTrue(cm.getContatoNaoEncontrado() == "margarida",
+            self.assertTrue(cm.getContatoNaoEncontrado() == "margarida",
                         "A excecao nao retornou o id do contato que nao existe")
         self.assertEqual(1, self.gcont.getCircle(self.FAMILIA).getNumberOfContacts(),
                          "Numero de contatos no circulo errado")
@@ -136,7 +136,7 @@ class ContactsCircleRelationsTest(unittest.TestCase):
         with self.assertRaises(CirculoNotFoundException) as cm:
             self.gcont.untie(self.JAMES, self.FAMILIA)
 
-        self.assertTrue(cm.getCirculoNaoEncontrado() == self.FAMILIA,
+            self.assertTrue(cm.getCirculoNaoEncontrado() == self.FAMILIA,
                         "A excecao nao retornou o id do circulo que nao existe")
 
     def test_removendoCirculoQuePossuiContatos(self):  # throws CirculoNotFoundException, ContatoNotFoundException {
@@ -200,7 +200,7 @@ class ContactsCircleRelationsTest(unittest.TestCase):
         with self.assertRaises(ContatoNotFoundException) as cm:
             self.gcont.getCircles(self.JAMES)
 
-        self.assertTrue(cm.getContatoNaoEncontrado() == self.JAMES,
+            self.assertTrue(cm.getContatoNaoEncontrado() == self.JAMES,
                         "A excecao nao retornou o id do contato que nao existe")
 
         self.assertEqual(None, self.gcont.getContact(self.JAMES))
